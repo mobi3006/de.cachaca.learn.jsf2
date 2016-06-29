@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://xmlns.jcp.org/jsf/html">
+<h:head>
+	<title>Parametrized Method Invocation mit Expression Language</title>
+</h:head>
+<h:body>
+	<h:form id="pierreForm">
+		<h1>Messages</h1>
+		<p>
+			JSF Core bietet h:message, h:messages. Primefaces bietet auch solche Komponenten.
+        </p>
+		<p>
+			Die h:message/p:message gibt allerdings nur eine einzige Nachricht aus (die erste). Man kann aber
+			problemlos Nachrichten auch an Buttons hängen.
+			Primefaces bring schon gleich ein Default-Styling mit.
+        </p>
+		
+		<p>
+			Schreib was du willst:<h:inputText id="inputText"/>
+			<h:commandButton id="button" value="create message" action="#{messageCreator.createMessages}"/>
+		</p>
+		
+		<hr/>
+
+		<p>Nachrichten für das Input-Feld (mit Core-Jsf):<br/> 
+			<h:message for="pierreForm:inputText"/></p>
+		
+		<p>Nachrichten für das Input-Feld (mit Primefaces):<br/> 
+			<p:message for="pierreForm:inputText"/></p>
+		
+		<p>Nachrichten für den Button (mit Core-Jsf):<br/> 
+			<h:message for="pierreForm:button"/></p>
+
+		<p>Nachrichten für den Button (mit Primefaces-Jsf):<br/> 
+			<p:message for="pierreForm:button"/></p>
+
+		<p>Alle Nachrichten (mit Core-Jsf):<br/> 
+			<h:messages globalOnly="false"/></p>
+		
+		<p>Alle Nachrichten (mit Primefaces):<br/> 
+			<p:messages globalOnly="false"/></p>
+		
+		<p>Nur globale Nachrichten (die also keiner ClientId zugeordnet sind) - mit Core-JSF:<br/> 
+			<h:messages globalOnly="true"/></p>
+
+		<p>Nur globale Nachrichten (die also keiner ClientId zugeordnet sind) - mit Primefaces:<br/> 
+			<p:messages globalOnly="true"/></p>
+	</h:form>
+</h:body>
+</html>

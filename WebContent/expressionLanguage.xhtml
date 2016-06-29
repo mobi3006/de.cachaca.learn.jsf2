@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://xmlns.jcp.org/jsf/html">
+<h:head>
+	<title>Parametrized Method Invocation mit Expression Language</title>
+</h:head>
+<h:body>
+	<h:form id="pierreForm">
+		<p>
+			Es ist interssant, dass die Expression Language kein "null" als Parameter an
+			die aufgerufene Java-Methode übergibt, sondern ein Objekt instanziiert und übergibt.
+		</p>
+		<p>
+			Ausserdem ist die Expression Language so fehlertolerant ausgelegt, daß ein vom Typ
+			vollkommen unpassender Übergabeparameter (String statt BigDecimal) zu keinem
+			Fehler führt. Es wird stattdessen auch der Default-Konstruktor verwendet, um eine
+			passende Instanz zu erzeugen.
+        </p>
+		<p>
+			Age: #{user.age}
+        </p>
+			
+		<h:commandButton value="setAge(null)" action="#{user.setAge(null)}"/>
+		<h:commandButton value="setAge(3)" action="#{user.setAge(3)}"/>
+		<h:commandButton value="setAge(wzzwzq)" action="#{user.setAge(wzzwzq)}"/>
+	</h:form>
+</h:body>
+</html>

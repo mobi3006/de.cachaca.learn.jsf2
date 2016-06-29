@@ -1,0 +1,118 @@
+### Eclipse Workspace Patch 1.0
+#P ac360-dms-data-facade-HEAD-SNAPSHOT
+Index: src/main/java/com/roche/ac360/dms/data/facade/reporting/domainmodel/crud/LogBookEntryAnalyzerForUpdate.java
+===================================================================
+--- src/ROCHE_TRUNK/cdp/modules/dms-data-facade/src/main/java/com/roche/ac360/dms/data/facade/reporting/domainmodel/crud/LogBookEntryAnalyzerForUpdate.java	(revision 194056)
++++ src/ROCHE_TRUNK/cdp/modules/dms-data-facade/src/main/java/com/roche/ac360/dms/data/facade/reporting/domainmodel/crud/LogBookEntryAnalyzerForUpdate.java	(working copy)
+@@ -101,6 +101,9 @@
+         checkNotNull(
+                 "this is represented by Delete-use-case - use LogBookAnalyzeForDelete",
+                 afterLogBookEntry);
++
++        analyzeLogBookEntryDate();
++        
+         resultDtoCommandFactory =
+                 new PersistenceCommandFactory<ResultDto, ResultServiceDtoAdapter>(resultService);
+         patientEventDtoCommandFactory =
+@@ -128,7 +131,6 @@
+         this.persistedEntries = persistedEntries;
+ 
+         determineDateTimeInformation();
+-        analyzeLogBookEntryDate();
+ 
+         analyzeRecordsMappedToBloodGlucoseResult();
+         analyzeA1cRecord();
+@@ -1279,6 +1281,10 @@
+     private void analyzeLogBookEntryDate() {
+         isLogBookEntryDateChanged =
+                 beforeLogBookEntry.getDate().getTime() != afterLogBookEntry.getDate().getTime();
++        
++        // see 912830912271
++        if (isLogBookEntryDateChanged)
++            appendSecondsToMeasurementTime(afterLogBookEntry);
+     }
+ 
+     // ********************************************************************************************
+Index: src/main/java/com/roche/ac360/dms/data/facade/reporting/domainmodel/crud/LogBookEntryAnalyzer.java
+===================================================================
+--- src/ROCHE_TRUNK/cdp/modules/dms-data-facade/src/main/java/com/roche/ac360/dms/data/facade/reporting/domainmodel/crud/LogBookEntryAnalyzer.java	(revision 194056)
++++ src/ROCHE_TRUNK/cdp/modules/dms-data-facade/src/main/java/com/roche/ac360/dms/data/facade/reporting/domainmodel/crud/LogBookEntryAnalyzer.java	(working copy)
+@@ -801,6 +801,15 @@
+     }
+     
+    /**
++     * This methods spreads the afterLogBookEntry.getDate() to the ResultDto's date-time-informations:
++     * <ul>
++     *  <li>StructuredDateTimeDto: Result.resultDate</li>
++     *  <li>Date: Result.effectiveDate (aka internalResultDate)</li>
++     * </ul>
++     * that should be in sync. This synchonization is done by a Listener in persistence layer. We
++     * also do it here because we want to establish a rich domain layer - therefore data needs to
++     * be consistent.
++     * 
+      * We expect that targetLogBookEntry.getDate() is in UTC and a possible timezone information is 
+      * stored in targetLogBookEntry.getTimezoneOffset(). 
+      */
+@@ -817,7 +826,6 @@
+         resultDate = new StructuredDateTimeDto();
+         resultDate.setDateTime(dateDto);
+         
+-        // TODO ... DO I REALLY HAVE TO SET THE INTERNALRESULTDATE?
+         long dateAsLong = CanonicDateTimeUtil.computeCanonicValue(
+                                 dateWithoutTimezoneOffset, CanonicDateTimeUtil.ZERO_OFFSET);
+         internalResultDate = new Date(dateAsLong);
+@@ -832,6 +840,13 @@
+     protected boolean isPersistent(GenericRecordImpl<?> record) {
+         return record != null && record.isPersistent();
+     }
++    
++    protected void appendSecondsToMeasurementTime(LogBookEntryImpl logBookEntry) {
++        if (logBookEntry.getDate() != null)
++            logBookEntry
++                .getDate()
++                .setSeconds(createRandomSeconds());
++    }
+ 
+     // ********************************************************************************************
+     //                                        INTERNAL HELPERS
+@@ -868,4 +883,9 @@
+         }
+     }
+ 
++    private int createRandomSeconds() {
++        // as requested in BAS-4555
++        return new Date().getSeconds();
++    }
++
+ }
+\ No newline at end of file
+Index: src/main/java/com/roche/ac360/dms/data/facade/reporting/domainmodel/crud/LogBookEntryAnalyzerForAdd.java
+===================================================================
+--- src/ROCHE_TRUNK/cdp/modules/dms-data-facade/src/main/java/com/roche/ac360/dms/data/facade/reporting/domainmodel/crud/LogBookEntryAnalyzerForAdd.java	(revision 194056)
++++ src/ROCHE_TRUNK/cdp/modules/dms-data-facade/src/main/java/com/roche/ac360/dms/data/facade/reporting/domainmodel/crud/LogBookEntryAnalyzerForAdd.java	(working copy)
+@@ -50,6 +50,18 @@
+                 scope, 
+                 null, 
+                 afterLogBookEntry);
++        
++        // 912830912271
++        // The user-input-granularity of the measurement time is minutes. This can result in
++        // merging this LogBookEntry with others with the same measurement timestamp.
++        // We "solve" this by appending random seconds (instead of the provided 0 seconds) to
++        // users input. This should reduce the risk dramatically.
++        //
++        // This adaption also has to take place if the measurement time was changed by the
++        // user.
++        //
++        // PROBLEM: we adapt business data for technical reasons ... this may have side-effects.
++        appendSecondsToMeasurementTime(afterLogBookEntry);        
+     }
+ 
+     public List<PersistenceCommand<?>> analyzeChanges() {
+@@ -279,5 +291,5 @@
+                         resultCrudService, 
+                         createResultDtoForTemperatureRecord(temperatureRecord, false)));
+     }
+-    
++
+ }

@@ -1,0 +1,128 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://xmlns.jcp.org/jsf/html">
+<h:head>
+	<title>Welcome to JSF 2.2</title>
+</h:head>
+<h:body>
+	<p>
+		Hier teste ich die Primefaces Komponente p:focus, die automatisch zum ersten Fehler auf
+		der Seite springen soll.
+	</p>
+	<h:form id="pierreForm">
+		<h1 class="title">JSF 2.2: Start Page</h1>
+        <p:focus/>
+        <p>
+			<p:commandButton value="Click" update="@form" actionListener="#{focusView.save}"/>
+		</p>
+		Pierre<br/>
+		Pierre<br/>
+		Pierre<br/>
+		Pierre<br/>
+		Pierre<br/>
+		Pierre<br/>
+		Pierre<br/>
+		Pierre<br/>
+		Pierre<br/>
+		Pierre<br/>
+		Pierre<br/>
+		Pierre<br/>
+		Pierre<br/>
+		Pierre<br/>
+		Pierre<br/>
+		Pierre<br/>
+		Pierre<br/>
+		Pierre<br/>
+		Pierre<br/>
+		Pierre<br/>
+		Pierre<br/>
+		Pierre<br/>
+		Pierre<br/>
+		Pierre<br/>
+		Pierre<br/>
+		Pierre<br/>
+		Pierre<br/>
+		Pierre<br/>
+		Pierre<br/>
+		Pierre<br/>
+		Pierre<br/>
+		Pierre<br/>
+		Pierre<br/>
+		Pierre<br/>
+		Pierre<br/>
+		Pierre<br/>
+		Pierre<br/>
+		Pierre<br/>
+		Pierre<br/>
+		Pierre<br/>
+		Pierre<br/>
+		Pierre<br/>
+		Pierre<br/>
+		Pierre<br/>
+		Pierre<br/>
+		Pierre<br/>
+		Pierre<br/>
+		Pierre<br/>
+		Pierre<br/>
+		Pierre<br/>
+		Pierre<br/>
+		Pierre<br/>
+		Pierre<br/>
+		What's your name*: <h:inputText id="comment" required="true" requiredMessage="hee, Eingabe fehlt"/><br/>
+         <h:message for="comment" />
+	</h:form>
+	<h:form id="primefacesExampleCode">
+	 
+        <p:focus/>
+
+		<p>	 
+        	<p:commandButton id="submitButton" value="Save" update="@parent" actionListener="#{focusView.save}" />
+		</p>
+		
+		Primefaces<br/>
+		Primefaces<br/>
+		Primefaces<br/>
+		Primefaces<br/>
+		Primefaces<br/>
+		Primefaces<br/>
+		Primefaces<br/>
+		Primefaces<br/>
+		Primefaces<br/>
+		Primefaces<br/>
+		Primefaces<br/>
+		Primefaces<br/>
+		Primefaces<br/>
+		Primefaces<br/>
+		Primefaces<br/>
+		Primefaces<br/>
+		Primefaces<br/>
+		Primefaces<br/>
+		Primefaces<br/>
+		Primefaces<br/>
+		Primefaces<br/>
+		Primefaces<br/>
+		Primefaces<br/>
+		Primefaces<br/>
+		Primefaces<br/>
+		Primefaces<br/>
+		Primefaces<br/>
+		Primefaces<br/>
+		Primefaces<br/>
+
+        <h:panelGrid columns="3">
+            <p:outputLabel for="username" value="Username" />
+            <p:inputText id="username" value="#{focusView.username}" required="true" label="Firstname">
+            </p:inputText>
+            <p:message for="username" />
+ 
+            <p:outputLabel for="email" value="Email" />
+            <p:inputText id="email" value="#{focusView.email}" required="true" label="Surname"/>
+            <p:message for="email" />
+        </h:panelGrid>
+	 
+	</h:form>	
+</h:body>
+</html>
